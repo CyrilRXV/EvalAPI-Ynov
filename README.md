@@ -139,21 +139,27 @@ Body :
 Réponse :
 {
     "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzY0ODkxNzk2LCJleHAiOjE3NjQ4OTIwOTZ9.BMxYEddL42mOrUwYu3pSJ2zmgGRyfdVrcyjxDyjo-S8",
+    "token_type": "Bearer",
     "refresh_token": "IYSFQ9hZwLZSpjHxkfESfof5v5zEMxuU3VE9gFhaSut8vPeSMSpQMhh5IaZV3Pn7",
     "message": "Successfully logged in"
 }
 ```
 
 ### POST /api/auth/logout
-
 ```
+Réponse :
+{
+'message' => 'Logged out'
+}
+```
+
+
 ### POST /api/auth/refresh
-```
-
 ```
 Réponse :
 {
     "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzY0ODkxODU0LCJleHAiOjE3NjQ4OTIxNTR9.wlm5I1Mjr3b6Usb0mFoH_AV4yi6YAzebw0BS2j8mFhc",
+    "token_type": "Bearer",
     "refresh_token": "DWs3k5r4BuXgDTTkSojR956GRBc2hHmjqEipJ8sU8eweXcVrDeT0JIsrj7Fbbj9Q",
     "message": "Refresh token successfully"
 }

@@ -33,6 +33,7 @@ public function __construct(
 
             return response()->json([
                 'access_token' => $accessToken,
+                'token_type' => 'Bearer',
                 'refresh_token' => $refreshToken,
                 'message' => 'Successfully logged in',
             ]);
@@ -71,6 +72,7 @@ public function __construct(
 
         return response()->json([
             'access_token' => $accessToken,
+            'token_type' => 'Bearer',
             'refresh_token' => $refreshToken,
             'message' => 'Refresh token successfully',
         ]);
