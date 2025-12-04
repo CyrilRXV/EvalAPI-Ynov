@@ -1,59 +1,160 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+API – Documentation
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+```
+GET /api/products
+```
 
-## About Laravel
+## 🔍 1. Paramètres disponibles
+| Paramètre      | Type  |                                     Description |
+| :---        |:-----:|------------------------------------------------:|
+| category      | string |        Filtre les produits par nom de catégorie |
+| min_price   | float  |Filtre les produits dont le prix est ≥ min_price |
+| max_price   | float  |Filtre les produits dont le prix est ≤ max_price |
+| sort   | string  |Champ sur lequel trier (price, name, …) |
+| direction   | string  |Sens du tri : asc ou desc |
+| include   | string  |Relation(s) à inclure : category |
+| limit   | integer  |Nombre de résultats par page (default: 20) |
+| page   | integer  |Numéro de page pour la pagination Laravel |
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+➡️ Tous ces paramètres sont optionnels.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🌐 2. Exemple complet d’URL
+```
+GET /api/products?category=Electronics&min_price=50&max_price=200&sort=price&direction=asc&include=category&limit=10&page=2
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🔎 3. Filtrage (Filter)
+### Filtrer par catégorie
+```
+GET /api/products?category=Books
+```
 
-## Learning Laravel
+### Filtrer par prix minimum
+```
+GET /api/products?min_price=20
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### Filtrer par prix maximum
+```
+GET /api/products?max_price=100
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Filtre combiné
+```
+GET /api/products?category=Books&min_price=10&max_price=50
+```
 
-## Laravel Sponsors
+## ↕️ 4. Tri (Sort)
+Tri ascendant par prix
+```
+GET /api/products?sort=price&direction=asc
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Tri descendant par nom
+```
+GET /api/products?sort=name&direction=desc
+```
 
-### Premium Partners
+Si direction est omis → asc par défaut.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 🔗 5. Relations conditionnelles (Include)
 
-## Contributing
+Permet de charger les relations uniquement si demandé.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Inclure la catégorie du produit
+```
+GET /api/products?include=category
+```
 
-## Code of Conduct
+Réponse :
+```
+{
+"name": "Laptop",
+"price": 999,
+"category": {
+    "id": 1,
+    "name": "Electronics"
+    }
+}
+```
+Si include n’est PAS présent → la relation n’est pas chargée.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 📄 6. Pagination
 
-## Security Vulnerabilities
+La pagination suit le système Laravel :
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Limiter à 5 résultats :
+```
+GET /api/products?limit=5
+```
 
-## License
+Page 3 :
+```
+GET /api/products?page=3
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🛠 7. Notes techniques
+
+Ces paramètres sont traités via un ProductQueryBuilder et un ProductFilterDto :
+
+filterByCategory()
+
+filterByMinOrMaxPrice()
+
+sortBy()
+
+includeRelations()
+
+## 🔑 8. 🔐 Authentification JWT
+ * Access Token
+    - envoyé dans le header Authorization
+   - expire vite → 5 minutes
+
+utilisé pour toutes les requêtes protégées
+Authorization: Bearer <access_token>
+
+* Refresh Token
+    - stocké dans un cookie sécurisé
+    - expire en 30 jours
+
+renouvelé automatiquement
+jamais envoyé dans le frontend → réduit les risques
+
+Dans Laravel :
+Cookie: refresh_token=<token>; 
+
+## 🚪 9. Routes d’authentification
+
+
+### POST /api/auth/login
+
+```
+Body :
+{
+"email": "user@example.com",
+"password": "password"
+}
+```
+```
+Réponse :
+{
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzY0ODkxNzk2LCJleHAiOjE3NjQ4OTIwOTZ9.BMxYEddL42mOrUwYu3pSJ2zmgGRyfdVrcyjxDyjo-S8",
+    "refresh_token": "IYSFQ9hZwLZSpjHxkfESfof5v5zEMxuU3VE9gFhaSut8vPeSMSpQMhh5IaZV3Pn7",
+    "message": "Successfully logged in"
+}
+```
+
+### POST /api/auth/logout
+
+```
+### POST /api/auth/refresh
+```
+
+```
+Réponse :
+{
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzY0ODkxODU0LCJleHAiOjE3NjQ4OTIxNTR9.wlm5I1Mjr3b6Usb0mFoH_AV4yi6YAzebw0BS2j8mFhc",
+    "refresh_token": "DWs3k5r4BuXgDTTkSojR956GRBc2hHmjqEipJ8sU8eweXcVrDeT0JIsrj7Fbbj9Q",
+    "message": "Refresh token successfully"
+}
+```
