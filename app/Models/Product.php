@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\QueryBuilders\ProductQueryBuilder;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +21,9 @@ use Illuminate\Support\Collection;
  *
  * - Relations.
  * @property Collection<int,Category> $category
+ *  - Support.
+ *
+ * @method static ProductQueryBuilder query()
  */
 
 class Product extends Model
@@ -30,5 +34,10 @@ class Product extends Model
     public function category(): belongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function newEloquentBuilder($query): ProductQueryBuilder
+    {
+        return new ProductQueryBuilder($query);
     }
 }
