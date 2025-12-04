@@ -1,11 +1,11 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::get('user', [UserController::class, 'show'])->middleware('auth.jwt');
+Route::get('products', [ProductController::class, 'index']);
 
-Route::get('/products', [ProductController::class, 'index']);
+require __DIR__.'/auth.php';
